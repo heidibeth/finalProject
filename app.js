@@ -11,7 +11,9 @@ app.use(Express.json());
 app.use(middleware.CORS);
 
 app.use('/user', controllers.userController);
-app.use('/mood', controllers.moodController);
+app.use('/moodlog', controllers.moodController);
+app.use('/todo', controllers.toDoController);
+app.use('/chart', controllers.moodChartController);
 
 dbConnection
   .authenticate()
