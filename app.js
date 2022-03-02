@@ -13,7 +13,7 @@ app.use(middleware.CORS);
 app.use('/user', controllers.userController);
 app.use('/moodlog', controllers.moodController);
 app.use('/todo', controllers.toDoController);
-app.use('/chart', controllers.moodChartController);
+app.use('/event', controllers.eventController);
 
 dbConnection
   .authenticate()

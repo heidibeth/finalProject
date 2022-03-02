@@ -3,18 +3,19 @@ const db = require('../db');
 const UserModel = require('./user');
 const MoodModel = require('./moodlog');
 const ToDoModel = require('./toDo');
-const MoodChart = require('./moodchart');
+const EventModel = require('./event');
+
 
 UserModel.hasMany(MoodModel);
 UserModel.hasMany(ToDoModel);
-UserModel.hasMany(MoodChart);
 
-MoodModel.hasMany(MoodChart);
-MoodChart.belongsTo(MoodModel);
+UserModel.hasMany(EventModel);
+EventModel.belongsTo(UserModel);
+EventModel.hasMany(ToDoModel);
+ToDoModel.belongsTo(EventModel);
 
 MoodModel.belongsTo(UserModel);
 ToDoModel.belongsTo(UserModel);
-MoodChart.belongsTo(UserModel);
 
 
 module.exports = {
@@ -23,6 +24,6 @@ module.exports = {
     UserModel,
     MoodModel,
     ToDoModel,
-    MoodChart
+    EventModel
     }
 };

@@ -1,26 +1,42 @@
 const router = require('express').Router();
 const validateJWT = require('../middleware/validate-jwt');
 const { models } = require('../models');
+const ToDo = require('../models/toDo');
 
 /* 
 ========================
- Create a To Do List
+ Create Event
 ========================
 */
 
 router.post('/', validateJWT, async (req, res) => {
-    const { eventId, toDo, isComplete } = req.body;
+    const { event, isComplete } = req.body;
   const { id } = req.user;
-  const toDoEntry = {
+  const eventEntry = {
       userId: id,
-      eventId,
-      toDo,
-      isComplete,
+      event
 };
     try {
-        const newToDoList = await models.ToDoModel.create(toDoEntry);
-        res.status(200).json(newToDoList);
+        const newEvent = await models.EventModel.create(eventEntry);
+        res.status(200).json(newEvent);
     } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
+
+/* 
+========================
+    Get All Events
+========================
+*/
+
+router.get('/all', validateJWT, async (req, res) => {
+    try {
+        const events = await models.EventModel.findAll({include:[{model: models.ToDoModel}]
+        });
+        res.status(200).json(events);
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err });
     }
 });
@@ -32,49 +48,49 @@ router.post('/', validateJWT, async (req, res) => {
 */
 
 router.put('/:id', validateJWT, async (req, res) => {
-    const { eventId, toDo, isComplete } = req.body;
+    const { event } = req.body;
 
     try {
-        await models.ToDoModel.update(
-           { eventId, toDo, isComplete },
+        await models.EventModel.update(
+           { event },
            { where: { id: req.params.id }, returning: true }
         ).then((result) => {
             res.status(200).json({
-                message: 'List successfully updated!',
-                updatedList: result,
+                message: 'Event successfully updated!',
+                updatedEvent: result,
               });
             });
           } catch (err) {
             res.status(500).json({
-              message: `Failed to update list ${err}`,
+              message: `Failed to update event ${err}`,
         });
     }
 });
 
 /* 
 ========================
-      Delete Logs
+      Delete Event
 ========================
 */
 
 router.delete('/:id', validateJWT, async (req, res) => {
     const userId = req.user.id;
-    const toDoEntryId = req.params.id;
+    const eventId = req.params.id;
   
     try {
       const query = {
         where: {
-          id: toDoEntryId,
+          id: eventId,
           userId: userId,
         },
       };
   
-      const deleteToDo = await models.ToDoModel.destroy(query);
+      const deleteEvent = await models.EventModel.destroy(query);
   
-      if (deleteToDo) {
-        req.user.id = deleteToDo;
+      if (deleteEvent) {
+        req.user.id = deleteEvent;
         res.status(200).json({
-          message: 'To Do Entry Removed',
+          message: 'Event Removed',
         });
       } else {
         res.status(403).json({
