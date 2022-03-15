@@ -21,8 +21,8 @@ router.post('/register', async (req, res) => {
       isAdmin: false
     });
 
-    let token = jwt.sign({ id: User.id }, process.env.JWT_SECRET, {
-      expiresIn: 60 * 60 * 24,
+    const token = jwt.sign({ id: User.id }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 12,
     });
 
     res.status(201).json({
@@ -57,11 +57,11 @@ router.post('/login', async (req, res) => {
       },
     });
     if (loginUser) {
-      let passwordCompare = await bcrypt.compare(password, loginUser.password);
+      const passwordCompare = await bcrypt.compare(password, loginUser.password);
 
       if (passwordCompare) {
         let token = jwt.sign({ id: loginUser.id }, process.env.JWT_SECRET, {
-          expiresIn: 60 * 60 * 24,
+          expiresIn: 60 * 60 * 12,
         });
         res.status(200).json({
           message: 'User successfully logged in!',
@@ -82,21 +82,6 @@ router.post('/login', async (req, res) => {
     res.status(500).json({
       message: `Failed to log user in. Error: ${err}`,
     });
-  }
-});
-
-/* 
-========================
-    Get all Users
-========================
-*/
-router.get('/all', async (req, res) => {
-  try {
-    const users = await models.UserModel.findAll({});
-    res.status(200).json({ users });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err });
   }
 });
 

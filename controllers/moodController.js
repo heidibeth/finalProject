@@ -12,18 +12,18 @@ router.post('/', validateJWT, async (req, res) => {
   const { id } = req.user;
   const moodEntry = {
     userId: id,
-    date,
-    mood,
-    struggleWith,
-    gratefulFor,
-    goalForWeek,
-    summaryOfDay
+    date: date,
+    mood: mood,
+    struggleWith: struggleWith,
+    gratefulFor: gratefulFor,
+    goalForWeek: goalForWeek,
+    summaryOfDay: summaryOfDay
   };
   try {
     const newEntry = await models.MoodModel.create(moodEntry);
     res.status(200).json(newEntry);
   } catch (err) {
-    res.status(500).json({ error: err.stack });
+    res.status(500).json({ error: err.message });
   }
 });
 

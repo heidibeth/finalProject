@@ -25,6 +25,23 @@ router.post('/', validateJWT, async (req, res) => {
     }
 });
 
+
+
+/* 
+========================
+ Get all todos
+========================
+*/
+router.get('/todos', validateJWT, async (req, res) => {
+  try {
+    const result = await models.ToDoModel.findAll();
+    res.status(201).json(result)
+  } catch (err) {
+    res.status(501).json("Unable to fetch todos" + err)
+  }
+})
+
+
 /* 
 ========================
     Update List

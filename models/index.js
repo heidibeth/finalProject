@@ -4,10 +4,12 @@ const UserModel = require('./user');
 const MoodModel = require('./moodlog');
 const ToDoModel = require('./toDo');
 const EventModel = require('./event');
+const ChartModel = require('./chart');
 
 
 UserModel.hasMany(MoodModel);
 UserModel.hasMany(ToDoModel);
+UserModel.hasMany(ChartModel);
 
 UserModel.hasMany(EventModel);
 EventModel.belongsTo(UserModel);
@@ -16,6 +18,7 @@ ToDoModel.belongsTo(EventModel);
 
 MoodModel.belongsTo(UserModel);
 ToDoModel.belongsTo(UserModel);
+ChartModel.belongsTo(UserModel);
 
 
 module.exports = {
@@ -24,6 +27,7 @@ module.exports = {
     UserModel,
     MoodModel,
     ToDoModel,
-    EventModel
+    EventModel,
+    ChartModel
     }
 };
